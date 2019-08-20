@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>观察者模式</title>
+    </head>
+    <body>
+        <script>
+
+            //发布者
+            let houseObj = {}
+            //花名册 缓存列表
+            houseObj.list = []
+            //增加订阅者
+            houseObj.listen = function (key, fn) {
+                // if(!this.list[key]){
+                //     this.list[key] = []
+                // }
+                //订阅消息添加数组里面
+                // this.list[key].push(fn)
+                (this.list[key] || (this.list[key] = [])).push(fn)
+            }
+            //遍历数组
+            houseObj.trigger = function () {
+                //取出消息类型
+                let key = Array.prototype.shift.call(arguments)
+                let fns = this.list[key]
+                if (!fns || fns.length === 0) {
+                    return
+                }
+                for (let i = 0, fn; fn = fns[i++];) {
+                    fn.apply(this, arguments) //arguments 是发布消息附带的参数
+                }
+            }
+            //小明的要求
+            houseObj.listen('big', function (size) {
+                console.log(`小明：` + size + `平米`)
+            })
+            //小绿的要求
+            houseObj.listen('small', function (size) {
+                console.log(`小绿：` + size + `平米`)
+            })
+
+            houseObj.trigger('big', 100)
+            houseObj.trigger('small', 80)
+
+        </script>
+
+    </body>
+</html>
